@@ -1,6 +1,6 @@
 # Infrastructure as Code
 
-**Live Demo**: [https://international-bookkeeping.vercel.app](https://international-bookkeeping.vercel.app)
+**Live Demo**: [https://infrastructure-as-code.vercel.app](https://infrastructure-as-code.vercel.app)
 
 This directory contains infrastructure-as-code definitions for the International Bookkeeping application.
 
