@@ -76,7 +76,7 @@ public class DataService
         {
             await _loggingService.LogAsync("error", 
                 $"Error processing chunk {chunkNumber}/{totalChunks}", 
-                $"Error: {ex.Message}, Stack: {ex.StackTrace?.Substring(0, Math.Min(500, ex.StackTrace.Length ?? 0)) ?? "N/A"}");
+                $"Error: {ex.Message}, Stack: {(ex.StackTrace != null && ex.StackTrace.Length > 500 ? ex.StackTrace.Substring(0, 500) : ex.StackTrace ?? "N/A")}");
             throw;
         }
     }

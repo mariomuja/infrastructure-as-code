@@ -184,11 +184,16 @@ resource "null_resource" "deploy_function_app" {
         # Build and create deployment package
         provisioner "local-exec" {
           command = <<-EOT
-            cd ${path.module}/../azure-functions/ProcessCsvBlobTrigger
+            $ErrorActionPreference = "Stop"
+            $functionPath = Resolve-Path "${path.module}/../azure-functions"
+            $triggerPath = "$functionPath/ProcessCsvBlobTrigger"
+            Set-Location $triggerPath
+            dotnet restore
             dotnet publish -c Release -o ./bin/publish
-            cd ${path.module}/../azure-functions
+            Set-Location $functionPath
             if (Test-Path function-app.zip) { Remove-Item function-app.zip -Force }
-            Compress-Archive -Path host.json,ProcessCsvBlobTrigger/bin/publish/* -DestinationPath function-app.zip -Force
+            $publishPath = "$triggerPath/bin/publish"
+            Compress-Archive -Path host.json,"$publishPath/*" -DestinationPath function-app.zip -Force
           EOT
           interpreter = ["PowerShell", "-Command"]
         }
@@ -196,11 +201,13 @@ resource "null_resource" "deploy_function_app" {
   # Deploy to Azure Functions
   provisioner "local-exec" {
     command = <<-EOT
+      $functionPath = Resolve-Path "${path.module}/../azure-functions"
+      $zipPath = "$functionPath/function-app.zip"
       az functionapp deployment source config-zip `
         --resource-group ${azurerm_resource_group.main.name} `
         --name ${azurerm_linux_function_app.main.name} `
-        --src ${path.module}/../azure-functions/function-app.zip `
-        --timeout 600
+        --src $zipPath `
+        --timeout 900
     EOT
     interpreter = ["PowerShell", "-Command"]
   }

@@ -6,12 +6,9 @@ using ProcessCsvBlobTrigger.Data;
 using ProcessCsvBlobTrigger.Services;
 
 var host = new HostBuilder()
-    .ConfigureFunctionsWebApplication()
+    .ConfigureFunctionsWorkerDefaults()
     .ConfigureServices(services =>
     {
-        services.AddApplicationInsightsTelemetryWorkerService();
-        services.ConfigureFunctionsApplicationInsights();
-
         // Configure Entity Framework Core
         var connectionString = $"Server={Environment.GetEnvironmentVariable("AZURE_SQL_SERVER")};" +
                               $"Database={Environment.GetEnvironmentVariable("AZURE_SQL_DATABASE")};" +

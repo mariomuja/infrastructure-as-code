@@ -1,6 +1,6 @@
 using System.Text;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Extensions.Blobs;
+using Microsoft.Azure.Functions.Worker.Extensions.Storage.Blobs;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using ProcessCsvBlobTrigger.Data;
