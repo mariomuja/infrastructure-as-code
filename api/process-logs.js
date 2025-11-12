@@ -16,6 +16,23 @@ async function getSqlConfig() {
 module.exports = async (req, res) => {
   try {
     const config = await getSqlConfig();
+    
+    // Validate configuration
+    if (!config.server || !config.database || !config.user || !config.password) {
+      const missing = [];
+      if (!config.server) missing.push('AZURE_SQL_SERVER');
+      if (!config.database) missing.push('AZURE_SQL_DATABASE');
+      if (!config.user) missing.push('AZURE_SQL_USER');
+      if (!config.password) missing.push('AZURE_SQL_PASSWORD');
+      
+      console.error('Missing SQL configuration:', missing);
+      return res.status(500).json({ 
+        error: 'Database configuration incomplete', 
+        details: `Missing environment variables: ${missing.join(', ')}`,
+        message: 'Please configure Azure SQL environment variables in Vercel'
+      });
+    }
+    
     const pool = await sql.connect(config);
     
     const result = await pool.request().query(`
@@ -31,8 +48,25 @@ module.exports = async (req, res) => {
     res.status(200).json(result.recordset);
   } catch (error) {
     console.error('Error fetching process logs:', error);
-    res.status(500).json({ error: 'Failed to fetch process logs', details: error.message });
+    
+    // Provide more detailed error information
+    let errorMessage = error.message;
+    if (error.code === 'ETIMEOUT' || error.code === 'ESOCKET') {
+      errorMessage = 'Cannot connect to Azure SQL Server. Check firewall rules and connection string.';
+    } else if (error.code === 'ELOGIN') {
+      errorMessage = 'Authentication failed. Check SQL credentials.';
+    } else if (error.code === 'EREQUEST') {
+      errorMessage = 'SQL query failed. Check if ProcessLogs table exists.';
+    }
+    
+    res.status(500).json({ 
+      error: 'Failed to fetch process logs', 
+      details: errorMessage,
+      code: error.code,
+      message: 'Please check Azure SQL configuration and ensure tables are initialized'
+    });
   }
 };
+
 
 
