@@ -1,0 +1,14 @@
+# Copy this file to terraform.tfvars and fill in your values
+
+resource_group_name = "rg-infrastructure-as-code"
+location            = "West Europe"
+
+# SQL Server credentials
+sql_admin_login     = "sqladmin"
+sql_admin_password  = "YourSecurePassword123!"
+
+# Optional: Allow your current IP
+allow_current_ip    = true
+current_ip_address  = "YOUR_IP_ADDRESS"
+
+

@@ -1,0 +1,12 @@
+{
+  "name": "infrastructure-as-code-api",
+  "version": "1.0.0",
+  "description": "API for CSV to SQL Server transport",
+  "dependencies": {
+    "@azure/storage-blob": "^12.22.0",
+    "mssql": "^10.0.1",
+    "uuid": "^9.0.1"
+  }
+}
+
+

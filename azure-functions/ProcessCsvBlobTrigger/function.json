@@ -1,0 +1,13 @@
+{
+  "bindings": [
+    {
+      "name": "myBlob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "csv-uploads/{name}",
+      "connection": "AzureWebJobsStorage"
+    }
+  ],
+      "scriptFile": "index.js"
+}
+

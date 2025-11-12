@@ -1,0 +1,9 @@
+node_modules
+.terraform
+*.tfstate
+*.tfvars
+terraform.tfvars
+azure-functions
+terraform
+
+
