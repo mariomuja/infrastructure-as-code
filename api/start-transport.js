@@ -79,9 +79,23 @@ module.exports = async (req, res) => {
     });
   } catch (error) {
     console.error('Error starting transport:', error);
+    
+    // Provide more detailed error information
+    let errorMessage = error.message || 'Unknown error';
+    let errorDetails = '';
+    
+    if (error.message && error.message.includes('Azure Storage credentials')) {
+      errorMessage = 'Azure Storage configuration incomplete';
+      errorDetails = 'Missing AZURE_STORAGE_CONNECTION_STRING or AZURE_STORAGE_ACCOUNT_NAME/AZURE_STORAGE_ACCOUNT_KEY in Vercel environment variables';
+    } else if (error.message && error.message.includes('container')) {
+      errorDetails = 'Error accessing or creating storage container';
+    }
+    
     res.status(500).json({ 
       error: 'Failed to start transport', 
-      details: error.message 
+      details: errorDetails || errorMessage,
+      message: errorMessage,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 };

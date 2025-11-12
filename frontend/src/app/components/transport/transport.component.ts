@@ -158,7 +158,38 @@ export class TransportComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       error: (error) => {
         console.error('Error loading SQL data:', error);
-        this.snackBar.open('Fehler beim Laden der SQL-Daten', 'Schließen', { duration: 3000 });
+        
+        // Extract detailed error message
+        let errorMessage = 'Fehler beim Laden der SQL-Daten';
+        let errorDetails = '';
+        
+        if (error.error) {
+          if (error.error.details) {
+            errorDetails = error.error.details;
+          } else if (error.error.message) {
+            errorDetails = error.error.message;
+          } else if (error.error.error) {
+            errorDetails = error.error.error;
+          }
+          
+          if (error.error.message) {
+            errorMessage = error.error.message;
+          } else if (error.error.error) {
+            errorMessage = error.error.error;
+          }
+        } else if (error.message) {
+          errorDetails = error.message;
+        }
+        
+        // Show detailed error message
+        const fullMessage = errorDetails 
+          ? `${errorMessage}: ${errorDetails}`
+          : errorMessage;
+        
+        this.snackBar.open(fullMessage, 'Schließen', { 
+          duration: 8000,
+          panelClass: ['error-snackbar']
+        });
       }
     });
   }
@@ -180,6 +211,26 @@ export class TransportComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       error: (error) => {
         console.error('Error loading process logs:', error);
+        
+        // Extract detailed error message
+        let errorMessage = 'Fehler beim Laden der Prozess-Logs';
+        let errorDetails = '';
+        
+        if (error.error) {
+          if (error.error.details) {
+            errorDetails = error.error.details;
+          } else if (error.error.message) {
+            errorDetails = error.error.message;
+          }
+        } else if (error.message) {
+          errorDetails = error.message;
+        }
+        
+        if (errorDetails) {
+          this.snackBar.open(`${errorMessage}: ${errorDetails}`, 'Schließen', { 
+            duration: 5000 
+          });
+        }
       }
     });
   }
@@ -232,7 +283,31 @@ export class TransportComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       error: (error) => {
         console.error('Error starting transport:', error);
-        this.snackBar.open('Fehler beim Starten des Transports', 'Schließen', { duration: 3000 });
+        
+        // Extract detailed error message
+        let errorMessage = 'Fehler beim Starten des Transports';
+        let errorDetails = '';
+        
+        if (error.error) {
+          if (error.error.details) {
+            errorDetails = error.error.details;
+          } else if (error.error.message) {
+            errorDetails = error.error.message;
+          } else if (error.error.error) {
+            errorDetails = error.error.error;
+          }
+        } else if (error.message) {
+          errorDetails = error.message;
+        }
+        
+        const fullMessage = errorDetails 
+          ? `${errorMessage}: ${errorDetails}`
+          : errorMessage;
+        
+        this.snackBar.open(fullMessage, 'Schließen', { 
+          duration: 8000,
+          panelClass: ['error-snackbar']
+        });
         this.isTransporting = false;
       }
     });
