@@ -90,6 +90,7 @@ jobs:
           echo "Function App Name: ${{ env.AZURE_FUNCTIONAPP_NAME }}"
           echo "Waiting 30 seconds for Functions to be registered..."
           sleep 30
+          echo "Deployment completed at $(date)"
           
       - name: 'List deployed functions'
         shell: bash
